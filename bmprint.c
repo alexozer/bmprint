@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MIN(a, b) (a < b ? a : b)
+
 int main() {
     char bm_path[512] = {};
     snprintf(bm_path, sizeof(bm_path), "%s%s", getenv("HOME"), "/doc/personal/bookmarks");
@@ -26,14 +28,12 @@ int main() {
             return 1;
         }
 
-        *tab_ptr = '\0'; // Split string in two
-        char *title = line;
         size_t title_len = tab_ptr - line;
         char *url = tab_ptr + 1;
 
         char padded_title[31] = {};
         memset(padded_title, ' ', sizeof(padded_title));
-        memcpy(padded_title, title, title_len);
+        memcpy(padded_title, line, MIN(title_len, sizeof(padded_title)));
         padded_title[sizeof(padded_title) - 1] = '\0';
 
         printf("%s\t\x1b[36m%s\x1b[m", padded_title, url);
